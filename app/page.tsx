@@ -11,6 +11,7 @@ export default function HomePage() {
           <Link href="/listings">Buy</Link>
           <Link href="/listings">Rent</Link>
           <Link href="/listings">Land</Link>
+          <Link href="/market">Market Overview</Link>
 
           <Link
             href="/post-listing"
@@ -33,29 +34,37 @@ export default function HomePage() {
 
           <p className="mb-8 text-lg text-gray-700">
             Avoid scams. Browse verified listings with trusted sellers and
-            secure messaging.
+            secure messaging. Compare market values before you buy, rent, or
+            list.
           </p>
 
-          <div className="rounded-2xl bg-white p-4 shadow-lg">
+          <form action="/market" className="rounded-2xl bg-white p-4 shadow-lg">
             <div className="grid gap-3 md:grid-cols-4">
-              <input className="rounded-xl border p-3" placeholder="City" />
+              <input
+                name="city"
+                className="rounded-xl border p-3"
+                placeholder="City"
+              />
 
-              <select className="rounded-xl border p-3">
-                <option>Rent</option>
-                <option>Buy</option>
-                <option>Land</option>
+              <select name="listing_type" className="rounded-xl border p-3">
+                <option value="rent">Rent</option>
+                <option value="sale">Buy</option>
+                <option value="">Any</option>
               </select>
 
-              <input className="rounded-xl border p-3" placeholder="Max price" />
+              <input
+                name="max_price"
+                className="rounded-xl border p-3"
+                placeholder="Max price"
+              />
 
-              <Link
-                href="/listings"
+              <button
                 className="rounded-xl bg-[#0B5D3B] p-3 text-center font-semibold text-white"
               >
-                Search
-              </Link>
+                Search Market
+              </button>
             </div>
-          </div>
+          </form>
         </div>
 
         <div className="rounded-3xl bg-[#0B5D3B] p-8 text-white shadow-xl">

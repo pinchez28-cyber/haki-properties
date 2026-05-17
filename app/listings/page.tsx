@@ -19,12 +19,18 @@ export default async function ListingsPage() {
         <div className="mb-8 flex items-center justify-between">
           <BrandLogo />
 
-          <Link
-            href="/post-listing"
-            className="rounded-xl bg-[#0B5D3B] px-4 py-2 text-white"
-          >
-            Post Listing
-          </Link>
+          <div className="flex flex-wrap items-center gap-3">
+            <Link href="/market" className="font-semibold text-[#0B5D3B]">
+              Market Overview
+            </Link>
+
+            <Link
+              href="/post-listing"
+              className="rounded-xl bg-[#0B5D3B] px-4 py-2 text-white"
+            >
+              Post Listing
+            </Link>
+          </div>
         </div>
 
         <h1 className="mb-2 text-4xl font-bold">

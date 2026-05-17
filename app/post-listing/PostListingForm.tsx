@@ -65,6 +65,14 @@ export default function PostListingForm() {
         risk_score: "medium",
       };
 
+      const propertyIdentifier = String(
+        formData.get("property_identifier") || ""
+      ).trim();
+
+      if (propertyIdentifier) {
+        payload.property_identifier = propertyIdentifier;
+      }
+
       if (documentUrls.length > 0) {
         payload.document_urls = documentUrls;
       }
@@ -140,6 +148,24 @@ export default function PostListingForm() {
         className="min-h-32 w-full rounded-xl border p-3"
         placeholder="Description"
       />
+
+      <div className="rounded-2xl border border-[#D6A84F]/50 bg-[#FAF8F2] p-4">
+        <label className="mb-2 block font-semibold">
+          Property Reference
+        </label>
+
+        <p className="mb-3 text-sm text-gray-700">
+          Add the title number, parcel number, LR number, plot number, or lease
+          reference if available. This helps prevent the same property from
+          being sold or listed multiple times.
+        </p>
+
+        <input
+          name="property_identifier"
+          className="w-full rounded-xl border bg-white p-3"
+          placeholder="Example: LR 12345/67 or Plot 22 Block C"
+        />
+      </div>
 
       <div>
         <label className="mb-2 block font-semibold">Property Image</label>
