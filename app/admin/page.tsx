@@ -32,7 +32,8 @@ export default function AdminPage() {
     setMessage("");
 
     const { data: sessionData } = await supabase.auth.getSession();
-    const email = sessionData.session?.user.email;
+    const user = sessionData.session?.user;
+    const email = user?.email;
 
     if (!email) {
       router.replace("/admin/login");
@@ -41,19 +42,21 @@ export default function AdminPage() {
 
     setCurrentEmail(email);
 
-    const { data: adminData, error: adminError } = await supabase
-      .from("admin_users")
-      .select("*")
-      .ilike("email", email)
-      .maybeSingle();
+    const { data: isAdmin, error: adminError } =
+      await supabase.rpc("is_haki_admin");
 
-    if (adminError || !adminData) {
+    if (adminError || !isAdmin) {
       setCurrentAdmin(null);
       setLoading(false);
       return;
     }
 
-    setCurrentAdmin(adminData as AdminUser);
+    setCurrentAdmin({
+      id: user.id,
+      email,
+      role: "admin",
+      created_at: new Date().toISOString(),
+    });
     await fetchListings();
     await fetchAdmins();
     setLoading(false);
