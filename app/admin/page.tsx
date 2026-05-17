@@ -1,17 +1,63 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+import { useRouter } from "next/navigation";
 import BrandLogo from "@/components/BrandLogo";
+import { supabase } from "@/lib/supabase";
+
+type AdminUser = {
+  id: string;
+  email: string;
+  role: string;
+  created_at: string;
+};
 
 export default function AdminPage() {
+  const router = useRouter();
   const [listings, setListings] = useState<any[]>([]);
   const [allListings, setAllListings] = useState<any[]>([]);
+  const [admins, setAdmins] = useState<AdminUser[]>([]);
+  const [currentAdmin, setCurrentAdmin] = useState<AdminUser | null>(null);
+  const [currentEmail, setCurrentEmail] = useState("");
+  const [newAdminEmail, setNewAdminEmail] = useState("");
+  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchListings();
+    loadAdminDashboard();
   }, []);
+
+  async function loadAdminDashboard() {
+    setLoading(true);
+    setMessage("");
+
+    const { data: sessionData } = await supabase.auth.getSession();
+    const email = sessionData.session?.user.email;
+
+    if (!email) {
+      router.replace("/admin/login");
+      return;
+    }
+
+    setCurrentEmail(email);
+
+    const { data: adminData, error: adminError } = await supabase
+      .from("admin_users")
+      .select("*")
+      .ilike("email", email)
+      .maybeSingle();
+
+    if (adminError || !adminData) {
+      setCurrentAdmin(null);
+      setLoading(false);
+      return;
+    }
+
+    setCurrentAdmin(adminData as AdminUser);
+    await fetchListings();
+    await fetchAdmins();
+    setLoading(false);
+  }
 
   async function fetchListings() {
     const { data, error } = await supabase
@@ -32,8 +78,44 @@ export default function AdminPage() {
     if (allData) {
       setAllListings(allData);
     }
+  }
 
-    setLoading(false);
+  async function fetchAdmins() {
+    const { data } = await supabase
+      .from("admin_users")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    setAdmins((data || []) as AdminUser[]);
+  }
+
+  async function addAdmin(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setMessage("");
+
+    const email = newAdminEmail.trim().toLowerCase();
+
+    if (!email) {
+      return;
+    }
+
+    const { error } = await supabase
+      .from("admin_users")
+      .insert({ email, role: "admin" });
+
+    if (error) {
+      setMessage(error.message);
+      return;
+    }
+
+    setNewAdminEmail("");
+    setMessage(`${email} was added as an admin.`);
+    await fetchAdmins();
+  }
+
+  async function signOut() {
+    await supabase.auth.signOut();
+    router.push("/admin/login");
   }
 
   async function approveListing(id: string) {
@@ -43,9 +125,7 @@ export default function AdminPage() {
       .eq("id", id);
 
     if (!error) {
-      setListings((prev) =>
-        prev.filter((listing) => listing.id !== id)
-      );
+      setListings((prev) => prev.filter((listing) => listing.id !== id));
     }
   }
 
@@ -82,8 +162,27 @@ export default function AdminPage() {
 
   if (loading) {
     return (
+      <main className="min-h-screen bg-[#f5f3ee] p-10">Loading...</main>
+    );
+  }
+
+  if (!currentAdmin) {
+    return (
       <main className="min-h-screen bg-[#f5f3ee] p-10">
-        Loading...
+        <div className="mx-auto max-w-2xl rounded-3xl bg-white p-8 shadow-xl">
+          <BrandLogo />
+          <h1 className="mt-8 text-3xl font-bold">Admin access required</h1>
+          <p className="mt-3 text-slate-600">
+            You are logged in as {currentEmail}, but this email has not been
+            added as a Haki Marketplace admin.
+          </p>
+          <button
+            onClick={signOut}
+            className="mt-6 rounded-xl bg-[#0B5D3B] px-5 py-3 font-semibold text-white"
+          >
+            Log Out
+          </button>
+        </div>
       </main>
     );
   }
@@ -94,12 +193,20 @@ export default function AdminPage() {
         <div className="mb-10 flex flex-col gap-5 border-b border-slate-200 pb-6 md:flex-row md:items-center md:justify-between">
           <BrandLogo href="/admin" label="Haki Admin" />
 
-          <a
-            href="/"
-            className="rounded-xl border border-slate-300 px-4 py-2 text-center font-semibold text-slate-700 hover:bg-white"
-          >
-            View Public Site
-          </a>
+          <div className="flex flex-wrap gap-3">
+            <a
+              href="/"
+              className="rounded-xl border border-slate-300 px-4 py-2 text-center font-semibold text-slate-700 hover:bg-white"
+            >
+              View Public Site
+            </a>
+            <button
+              onClick={signOut}
+              className="rounded-xl bg-slate-900 px-4 py-2 font-semibold text-white"
+            >
+              Log Out
+            </button>
+          </div>
         </div>
 
         <h1 className="text-5xl font-bold text-slate-900 mb-3">
@@ -107,8 +214,51 @@ export default function AdminPage() {
         </h1>
 
         <p className="text-slate-600 mb-10">
-          Review pending property listings before they go live.
+          Review pending property listings before they go live. Logged in as{" "}
+          <strong>{currentEmail}</strong>.
         </p>
+
+        <section className="mb-10 rounded-3xl bg-white p-6 shadow">
+          <div className="mb-5 flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+            <div>
+              <h2 className="text-2xl font-bold">Admin Users</h2>
+              <p className="text-slate-600">
+                Add the email address of someone you want to approve listings.
+              </p>
+            </div>
+          </div>
+
+          {message && (
+            <p className="mb-5 rounded-xl bg-green-50 p-3 font-semibold text-green-700">
+              {message}
+            </p>
+          )}
+
+          <form onSubmit={addAdmin} className="mb-6 flex flex-col gap-3 md:flex-row">
+            <input
+              type="email"
+              value={newAdminEmail}
+              onChange={(event) => setNewAdminEmail(event.target.value)}
+              className="flex-1 rounded-xl border p-3"
+              placeholder="new-admin@example.com"
+              required
+            />
+            <button className="rounded-xl bg-[#0B5D3B] px-5 py-3 font-semibold text-white">
+              Add Admin
+            </button>
+          </form>
+
+          <div className="grid gap-3 md:grid-cols-2">
+            {admins.map((admin) => (
+              <div key={admin.id} className="rounded-2xl bg-slate-50 p-4">
+                <p className="font-bold">{admin.email}</p>
+                <p className="text-sm uppercase tracking-wide text-slate-500">
+                  {admin.role}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
 
         <div className="space-y-6">
           {listings.length === 0 && (
@@ -118,7 +268,10 @@ export default function AdminPage() {
           )}
 
           {listings.map((listing) => (
-            <div key={listing.id} className="bg-white rounded-2xl shadow overflow-hidden">
+            <div
+              key={listing.id}
+              className="bg-white rounded-2xl shadow overflow-hidden"
+            >
               <ListingReviewCard
                 listing={listing}
                 duplicateWarnings={getDuplicateWarnings(listing)}
@@ -214,9 +367,7 @@ function ListingReviewCard({
           </p>
         </div>
 
-        <p className="text-slate-600 leading-7 mb-6">
-          {listing.description}
-        </p>
+        <p className="text-slate-600 leading-7 mb-6">{listing.description}</p>
 
         {Array.isArray(listing.document_urls) &&
           listing.document_urls.length > 0 && (
