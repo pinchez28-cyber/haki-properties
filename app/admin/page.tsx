@@ -194,7 +194,7 @@ export default function AdminPage() {
     <main className="min-h-screen bg-[#f5f3ee] p-10">
       <div className="max-w-5xl mx-auto">
         <div className="mb-10 flex flex-col gap-5 border-b border-slate-200 pb-6 md:flex-row md:items-center md:justify-between">
-          <BrandLogo href="/admin" label="Haki Admin" />
+          <BrandLogo href="/" label="Haki Admin" />
 
           <div className="flex flex-wrap gap-3">
             <a
