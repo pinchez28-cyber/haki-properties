@@ -1,5 +1,6 @@
 import Link from "next/link";
 import BrandLogo from "@/components/BrandLogo";
+import ShareButton from "@/components/ShareButton";
 
 export default function HomePage() {
   return (
@@ -12,6 +13,7 @@ export default function HomePage() {
           <Link href="/listings">Rent</Link>
           <Link href="/listings">Land</Link>
           <Link href="/market">Market Overview</Link>
+          <ShareButton />
 
           <Link
             href="/post-listing"
