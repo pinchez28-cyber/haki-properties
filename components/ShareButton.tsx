@@ -36,6 +36,11 @@ export default function ShareButton() {
     window.setTimeout(() => setCopied(false), 1800);
   }
 
+  async function shareToTikTok() {
+    await copyLink();
+    window.open("https://www.tiktok.com/", "_blank", "noopener,noreferrer");
+  }
+
   return (
     <div className="relative">
       <button
@@ -69,6 +74,20 @@ export default function ShareButton() {
           >
             Facebook
           </a>
+          <a
+            href={`https://www.snapchat.com/scan?attachmentUrl=${encodedUrl}`}
+            target="_blank"
+            className="block rounded-xl px-3 py-2 font-semibold hover:bg-[#FAF8F2]"
+          >
+            Snapchat
+          </a>
+          <button
+            type="button"
+            onClick={shareToTikTok}
+            className="block w-full rounded-xl px-3 py-2 text-left font-semibold hover:bg-[#FAF8F2]"
+          >
+            TikTok
+          </button>
           <a
             href={`mailto:?subject=Haki Marketplace&body=${encodedText}%0A%0A${encodedUrl}`}
             className="block rounded-xl px-3 py-2 font-semibold hover:bg-[#FAF8F2]"
