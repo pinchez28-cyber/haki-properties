@@ -67,17 +67,25 @@ export default function HomePage() {
           </form>
         </div>
 
-        <div className="rounded-3xl bg-[#0B5D3B] p-8 text-white shadow-xl">
-          <h2 className="mb-4 text-2xl font-bold">
-            Built for safer property deals
-          </h2>
+        <div className="overflow-hidden rounded-3xl bg-white shadow-xl">
+          <img
+            src="/images/homes-and-land-showcase.png"
+            alt="Modern homes beside open land plots"
+            className="h-72 w-full object-cover md:h-96"
+          />
 
-          <ul className="space-y-4 text-lg">
-            <li>Verified seller profiles</li>
-            <li>Document checks</li>
-            <li>Scam reporting</li>
-            <li>Secure messaging</li>
-          </ul>
+          <div className="bg-[#0B5D3B] p-8 text-white">
+            <h2 className="mb-4 text-2xl font-bold">
+              Built for safer property deals
+            </h2>
+
+            <ul className="space-y-4 text-lg">
+              <li>Verified seller profiles</li>
+              <li>Document checks</li>
+              <li>Scam reporting</li>
+              <li>Secure messaging</li>
+            </ul>
+          </div>
         </div>
       </section>
     </main>
