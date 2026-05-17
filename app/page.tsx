@@ -5,12 +5,12 @@ export default function HomePage() {
     <main className="min-h-screen bg-[#FAF8F2] text-[#1F2933]">
       
       {/* NAVBAR */}
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5">
+      <nav className="mx-auto flex max-w-7xl flex-col items-center justify-between px-6 py-5 md:flex-row">
         <div className="text-2xl font-bold text-[#0B5D3B]">
           Haki Properties
         </div>
 
-        <div className="hidden gap-6 md:flex">
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 md:mt-0">
           <Link href="/listings">Buy</Link>
           <Link href="/listings">Rent</Link>
           <Link href="/listings">Land</Link>
