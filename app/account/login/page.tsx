@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import BrandLogo from "@/components/BrandLogo";
 import { supabase } from "@/lib/supabase";
 
@@ -153,6 +154,16 @@ export default function AccountLoginPage() {
                 ? "Log In"
                 : "Create Account"}
           </button>
+
+          <div className="mt-6 border-t pt-5 text-center text-sm text-slate-600">
+            <span>Reviewing submissions?</span>{" "}
+            <Link
+              href="/admin/login"
+              className="font-bold text-[#0B5D3B] hover:underline"
+            >
+              Log in as admin
+            </Link>
+          </div>
         </form>
       </div>
     </main>
