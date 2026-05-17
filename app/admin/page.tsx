@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
+import BrandLogo from "@/components/BrandLogo";
 
 export default function AdminPage() {
   const [listings, setListings] = useState<any[]>([]);
@@ -49,8 +50,19 @@ export default function AdminPage() {
   return (
     <main className="min-h-screen bg-[#f5f3ee] p-10">
       <div className="max-w-5xl mx-auto">
+        <div className="mb-10 flex flex-col gap-5 border-b border-slate-200 pb-6 md:flex-row md:items-center md:justify-between">
+          <BrandLogo href="/admin" label="Haki Admin" />
+
+          <a
+            href="/"
+            className="rounded-xl border border-slate-300 px-4 py-2 text-center font-semibold text-slate-700 hover:bg-white"
+          >
+            View Public Site
+          </a>
+        </div>
+
         <h1 className="text-5xl font-bold text-slate-900 mb-3">
-          Admin Review
+          Administration Review
         </h1>
 
         <p className="text-slate-600 mb-10">
@@ -114,6 +126,34 @@ export default function AdminPage() {
                 <p className="text-slate-600 leading-7 mb-6">
                   {listing.description}
                 </p>
+
+                {Array.isArray(listing.document_urls) &&
+                  listing.document_urls.length > 0 && (
+                    <div className="mb-6 rounded-2xl bg-slate-50 p-4">
+                      <h3 className="mb-3 text-lg font-bold">
+                        Submitted Documents
+                      </h3>
+
+                      <div className="grid gap-3 sm:grid-cols-2">
+                        {listing.document_urls.map(
+                          (url: string, index: number) => (
+                            <a
+                              key={url}
+                              href={url}
+                              target="_blank"
+                              className="overflow-hidden rounded-xl border bg-white"
+                            >
+                              <img
+                                src={url}
+                                alt={`Submitted document ${index + 1}`}
+                                className="h-44 w-full object-cover"
+                              />
+                            </a>
+                          )
+                        )}
+                      </div>
+                    </div>
+                  )}
 
                 <button
                   onClick={() => approveListing(listing.id)}

@@ -1,5 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
+import BrandLogo from "@/components/BrandLogo";
 
 export default async function ListingsPage() {
   const { data: listings, error } = await supabase
@@ -16,9 +17,7 @@ export default async function ListingsPage() {
     <main className="min-h-screen bg-[#FAF8F2] px-6 py-8 text-[#1F2933]">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-[#0B5D3B]">
-            Haki Properties
-          </Link>
+          <BrandLogo />
 
           <Link
             href="/post-listing"

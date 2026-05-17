@@ -1,8 +1,13 @@
 import PostListingForm from "./PostListingForm";
+import BrandLogo from "@/components/BrandLogo";
 
 export default function PostListingPage() {
   return (
     <main className="min-h-screen bg-[#FAF8F2] px-6 py-10 text-[#1F2933]">
+      <div className="mx-auto mb-8 max-w-3xl">
+        <BrandLogo />
+      </div>
+
       <div className="mx-auto max-w-3xl rounded-2xl bg-white p-8 shadow">
         <h1 className="mb-2 text-3xl font-bold">Post a Property Listing</h1>
         <p className="mb-8 text-gray-700">
