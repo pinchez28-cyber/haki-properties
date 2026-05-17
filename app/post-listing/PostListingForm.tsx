@@ -65,6 +65,13 @@ export default function PostListingForm() {
         risk_score: "medium",
       };
 
+      const { data: sessionData } = await supabase.auth.getSession();
+      const userId = sessionData.session?.user.id;
+
+      if (userId) {
+        payload.seller_id = userId;
+      }
+
       const propertyIdentifier = String(
         formData.get("property_identifier") || ""
       ).trim();

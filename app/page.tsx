@@ -13,13 +13,8 @@ export default function HomePage() {
           <Link href="/listings">Rent</Link>
           <Link href="/listings">Land</Link>
           <Link href="/market">Market Overview</Link>
+          <Link href="/account">My Account</Link>
           <ShareButton />
-          <Link
-            href="/admin/login"
-            className="rounded-xl border border-[#0B5D3B]/30 px-4 py-2 font-semibold text-[#0B5D3B] hover:bg-white"
-          >
-            Admin Login
-          </Link>
 
           <Link
             href="/post-listing"
